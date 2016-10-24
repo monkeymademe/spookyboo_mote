@@ -7,17 +7,11 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 import config
 
-import time
 from colorsys import hsv_to_rgb
 import math
 from mote import Mote
 
 import threading
-
-print("""Rainbow
-
-Press Ctrl+C to exit.
-""")
 
 mote = Mote()
 
@@ -29,6 +23,7 @@ mote.configure_channel(4, 16, False)
 status = 1
 
 def single(strip, led):
+	# flashes a single LED
         i = 0
         while i < 6:
                 i = i + 1
@@ -41,6 +36,7 @@ def single(strip, led):
                 mote.show()
 
 def flash():
+	# flashes all the LEDs
         i = 0
         while i < 6:
                 i = i + 1
@@ -57,6 +53,7 @@ def flash():
                 mote.show()
 
 def fadered():
+	# fade to red from nothing
         red = 0
         while red < 255:
                 red = red + 10
@@ -68,12 +65,12 @@ def fadered():
                 time.sleep(0.1)
 
 def idle():
+	# idle colors cycling from red and orange/yellow 
 	try:
     		while True:
         		t = time.time()
         		for channel in range(4):
             			for pixel in range(16):
-                			#hue = (h + (channel * 64) + (pixel * 4)) % 60
 					hue = 15 + (math.sin(t) * 15)
 					r, g, b = [int(c * 255) for c in hsv_to_rgb(hue/360.0, 1.0, 1.0)]
                 			mote.set_pixel(channel + 1, pixel, r, g, b)
@@ -89,6 +86,7 @@ def idle():
 
 
 def replywithpic(tweetdata):
+	# replay to the tweet with an image
         msg = "@%s OoOoOoOoOoOoOo You ain't afraid of ghost.. are you?     %s" % (tweetdata['username'], tweetdata['date'])
         file = 'spooky.jpg'
         if len(msg) <= 140:
@@ -97,6 +95,7 @@ def replywithpic(tweetdata):
                 print "tweet not sent. Too long. 140 chars Max."
 
 def parsetweet(tweet):
+	# parse the data from the tweet sent so we can reply to it later
         tweetId = tweet['id']
         username = tweet['user']['screen_name'].encode('utf-8')
         now = datetime.datetime.now()
@@ -109,13 +108,13 @@ class StdOutListener(StreamListener):
         def on_data(self, data):
 		global status
                 tweet = json.loads(data)
-                # Print Usernam[Be
                 print(tweet['user']['name']).encode('utf-8')
                 # Print Text from tweet *note* encode is used because of speical charaters causing exception
                 print(tweet['text']).encode('utf-8')
                 # ----- do something
                 tweetdata = parsetweet(tweet)
                 if "#spookyboo" in tweetdata['text']:
+			# this is the animation part - note status = 2 is to stop the idle animation from interfearing with the animation
                 	status = 2
 			replywithpic(tweetdata)
 			flash()
@@ -131,6 +130,7 @@ class StdOutListener(StreamListener):
 			fadered()
 			flash()
 			status = 1
+			# status = 1 is to turn on the idle animation back on
                 return True
 
         def on_error(self, status):
@@ -148,11 +148,13 @@ if __name__ == '__main__':
         auth.set_access_token(config.access_token, config.access_token_secret)
         api = tweepy.API(auth)
 
+	#idle animation is run on another thread
 	idle = threading.Thread(target=idle)
 	idle.start()
 
         # Start Stream Tracking
         stream = Stream(auth, l)
-        #user = ["robinjamberlin"]
+	# you 'could' filter to only search for a keyword from a certain user 
+        # user = ["robinjamberlin"]
         keywords = ["#spookyboo"]
         stream.filter(track=keywords)

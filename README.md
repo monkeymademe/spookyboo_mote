@@ -12,6 +12,17 @@ This project is for halloween 2016 using the [Pimoroni Mote light strips](https:
 
 - Tweepy
 - [Mote library for Raspberry Pi](https://github.com/pimoroni/mote)
+- Twitter API keys
+
+## How to use
+
+Place the Mote sticks on your window (works best if you have blinds). It's worth noting that you place the sticks in order.
+
+Turn on your pi and make sure the date and time is correct then use the config_template.py to make a new file called config.py. Here you should put in your twitter API keys.
+
+Run the script : irbufw on your Raspberry Pi so it runs in the background. (I prefer using the screen command.)
+
+Then goto twitter send the hashtag '#spookyboo' and watch the animation!
 
 ## Videos
 

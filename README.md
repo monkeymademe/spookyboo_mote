@@ -15,5 +15,5 @@ This project is for halloween 2016 using the [Pimoroni Mote light strips](https:
 
 ## Videos
 
-[Vine: Testing the brightness](https://vine.co/v/5wQLuKn3i7O)
-[Vine: Testing tweepy and animations](https://vine.co/v/5dzaJvHleIO)
+- [Vine: Testing the brightness](https://vine.co/v/5wQLuKn3i7O)
+- [Vine: Testing tweepy and animations](https://vine.co/v/5dzaJvHleIO)
